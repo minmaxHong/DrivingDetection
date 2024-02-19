@@ -4,12 +4,23 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 
+'''
+1. lane detection
+2. 표지판까지 학습해보기
+
+'''
+
+
+
+
+
+
 # == 가중치, 모델 == 
 cfg_yolo = 'yolov3.cfg'
 weights_yolo = 'yolov3.weights'
 
 # == video ==
-video_path = 'challenge.mp4'
+video_path = 'videoplayback.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # == Label == 
@@ -19,6 +30,7 @@ labels_to_names_seq = {0:'person',1:'bicycle',2:'car',3:'motorbike',4:'aeroplane
                         31:'snowboard',32:'sports ball',33:'kite',34:'baseball bat',35:'baseball glove',36:'skateboard',37:'surfboard',38:'tennis racket',39:'bottle',40:'wine glass',
                         41:'cup',42:'fork',43:'knife',44:'spoon',45:'bowl',46:'banana',47:'apple',48:'sandwich',49:'orange',50:'broccoli',
                         51:'carrot',52:'hot dog',53:'pizza',54:'donut',55:'cake',56:'chair',57:'sofa',58:'pottedplant',59:'bed',60:'diningtable',
+                        
                         61:'toilet',62:'tvmonitor',63:'laptop',64:'mouse',65:'remote',66:'keyboard',67:'cell phone',68:'microwave',69:'oven',70:'toaster',
                         71:'sink',72:'refrigerator',73:'book',74:'clock',75:'vase',76:'scissors',77:'teddy bear',78:'hair drier',79:'toothbrush' 
                         }
@@ -33,8 +45,8 @@ outlayer_names = [layer_names[i - 1] for i in yolo_net.getUnconnectedOutLayers()
 
 def detect_objects(img, yolo_net, labels_to_names_seq, conf_threshold=0.5, nms_threshold=0.4):
     rows, cols, _ = img.shape
-
-    yolo_net.setInput(cv2.dnn.blobFromImage(img, scalefactor=1/255.0, size=(416, 416), swapRB=True, crop=False))
+    # 416, 416
+    yolo_net.setInput(cv2.dnn.blobFromImage(img, scalefactor=1/255.0, size=(160,160), swapRB=True, crop=False))
     cv_outs = yolo_net.forward(outlayer_names)
 
     green_color = (0, 255, 0)
@@ -80,7 +92,7 @@ while True:
     
     detect_objects(img, yolo_net, labels_to_names_seq)
 
-    cv2.imshow('img',img)
+    cv2.imshow('Detected_Car',img)
     # cv2.imshow('img', frame)
     key = cv2.waitKey(1)
     
